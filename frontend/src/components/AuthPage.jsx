@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function AuthPage({ onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,7 +13,8 @@ function AuthPage({ onLoginSuccess }) {
     e.preventDefault();
     setError("");
 
-    const endpoint = isLogin ? "/auth/login" : "/auth/register";
+    // FIX: Added /api prefix to match your Express backend routes
+    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
     const payload = isLogin ? { email, password } : { name, email, password };
 
     try {
