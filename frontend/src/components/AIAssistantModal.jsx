@@ -1,22 +1,21 @@
 import { useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function AIAssistantModal({ project, onClose, onApproveTasks }) {
-  // Summary State (FR-18, FR-19)
   const [summaryData, setSummaryData] = useState(null);
   const [loadingSummary, setLoadingSummary] = useState(false);
 
-  // Task Breakdown State (FR-20, FR-21, FR-22)
   const [featureIdea, setFeatureIdea] = useState("");
   const [proposedTasks, setProposedTasks] = useState([]);
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [loadingBreakdown, setLoadingBreakdown] = useState(false);
 
-  // 1. Call Backend for Grounded AI Project Summary
   const handleGenerateSummary = async () => {
     if (!project) return;
     try {
       setLoadingSummary(true);
-      const res = await fetch("http://localhost:5000/api/ai/summary", {
+      const res = await fetch(`${API_BASE}/ai/summary`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ projectId: project._id }),
@@ -30,14 +29,13 @@ function AIAssistantModal({ project, onClose, onApproveTasks }) {
     }
   };
 
-  // 2. Call Backend for Structured AI Task Breakdown
   const handleGenerateBreakdown = async (e) => {
     e.preventDefault();
     if (!featureIdea.trim()) return;
 
     try {
       setLoadingBreakdown(true);
-      const res = await fetch("http://localhost:5000/api/ai/breakdown", {
+      const res = await fetch(`${API_BASE}/ai/breakdown`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ featureIdea }),
@@ -45,7 +43,6 @@ function AIAssistantModal({ project, onClose, onApproveTasks }) {
       const data = await res.json();
       if (data.proposedTasks) {
         setProposedTasks(data.proposedTasks);
-        // Select all checkboxes by default so user can uncheck any they don't want
         setSelectedIndices(data.proposedTasks.map((_, idx) => idx));
       }
     } catch (error) {
@@ -63,7 +60,6 @@ function AIAssistantModal({ project, onClose, onApproveTasks }) {
     }
   };
 
-  // FR-21: Only persist tasks that the human explicitly approved!
   const handleApproveSelected = async () => {
     const tasksToCreate = proposedTasks.filter((_, idx) =>
       selectedIndices.includes(idx)
@@ -86,7 +82,6 @@ function AIAssistantModal({ project, onClose, onApproveTasks }) {
           <button className="close-btn" onClick={onClose}>✕</button>
         </div>
 
-        {/* SECTION 1: AI Project Summary */}
         <div className="ai-section">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <h4>📊 Grounded Project Summary</h4>
@@ -109,7 +104,6 @@ function AIAssistantModal({ project, onClose, onApproveTasks }) {
 
         <hr style={{ border: "none", borderTop: "1px solid #e2e8f0", margin: "18px 0" }} />
 
-        {/* SECTION 2: AI Task Breakdown with Human Approval Gate */}
         <div className="ai-section">
           <h4>🧩 AI Task Breakdown (Approval-Gated)</h4>
           <p style={{ fontSize: "12px", color: "#64748b", marginBottom: "10px" }}>

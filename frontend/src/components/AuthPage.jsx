@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function AuthPage({ onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
@@ -11,11 +13,11 @@ function AuthPage({ onLoginSuccess }) {
     e.preventDefault();
     setError("");
 
-    const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
+    const endpoint = isLogin ? "/auth/login" : "/auth/register";
     const payload = isLogin ? { email, password } : { name, email, password };
 
     try {
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -38,7 +40,7 @@ function AuthPage({ onLoginSuccess }) {
         <div className="auth-logo">⚡ DevFlow AI</div>
         <h2>{isLogin ? "Welcome Back" : "Create Account"}</h2>
         <p style={{ color: "#64748b", fontSize: "13px", marginBottom: "20px" }}>
-          Engineering collaboration platform with Al assistance.
+          Engineering collaboration platform with AI assistance.
         </p>
 
         {error && <div className="auth-error">{error}</div>}

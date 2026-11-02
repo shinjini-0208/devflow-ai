@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 function TaskCommentsModal({ task, onClose }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
@@ -10,7 +12,7 @@ function TaskCommentsModal({ task, onClose }) {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${task._id}/comments`);
+      const res = await fetch(`${API_BASE}/tasks/${task._id}/comments`);
       const data = await res.json();
       setComments(data);
     } catch (error) {
@@ -23,7 +25,7 @@ function TaskCommentsModal({ task, onClose }) {
     if (!newComment.trim()) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${task._id}/comments`, {
+      const res = await fetch(`${API_BASE}/tasks/${task._id}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ body: newComment, author: "You" }),
