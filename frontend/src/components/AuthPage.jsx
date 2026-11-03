@@ -52,7 +52,7 @@ function AuthPage({ onLoginSuccess }) {
               Full Name
               <input
                 type="text"
-                placeholder="Shinjini Biswas"
+                placeholder="Enter your full name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
