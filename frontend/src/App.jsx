@@ -10,7 +10,7 @@ import TeamPage from "./components/TeamPage";
 import NotificationsPage from "./components/NotificationsPage";
 import AuthPage from "./components/AuthPage";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_BASE = "https://devflow-ai-backend-ihoj.onrender.com/api" || "http://localhost:5000/api";
 
 function App() {
   const [user, setUser] = useState(null);
